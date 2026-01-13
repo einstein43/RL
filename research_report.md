@@ -41,7 +41,7 @@ I ran 5 different experiment groups to test different things:
 
 **Figure 1**: Learning curves for different learning rates
 
-![Figure 1](plots/Fig1_Learning_Rate_Comparison_20260113_155200.png)
+![Figure 1](./plots/Fig1_Learning_Rate_Comparison_20260113_155200.png)
 
 *Learning rate comparison on FrozenLake 4x4 (slippery=True). Settings: γ=0.99, ε-greedy (ε: 1.0→0.01, decay=0.995), 10,000 episodes.*
 
@@ -54,7 +54,7 @@ The medium learning rate (0.3) actually worked best in the end with 80% success 
 
 **Figure 2**: Q-table heatmap for best learning rate
 
-![Figure 2](plots/Fig1_Learning_Rate_Comparison_qtable_20260113_155200.png)
+![Figure 2](./plots/Fig1_Learning_Rate_Comparison_qtable_20260113_155200.png)
 
 *Q-table visualization showing state values and optimal policy arrows for α=0.3 (best performer).*
 
@@ -62,7 +62,7 @@ The medium learning rate (0.3) actually worked best in the end with 80% success 
 
 **Figure 3**: Comparison of stochastic vs deterministic environment
 
-![Figure 3](plots/Fig2_Slippery_Comparison_20260113_155243.png)
+![Figure 3](./plots/Fig2_Slippery_Comparison_20260113_155243.png)
 
 *Slippery comparison. Settings: α=0.1, γ=0.99, ε-greedy, 10,000 episodes.*
 
@@ -74,7 +74,7 @@ There was an issue with this experiment, both configurations failed to learn. Th
 
 **Figure 4**: Q-table for slippery environment
 
-![Figure 4](plots/Fig2_Slippery_Comparison_qtable_20260113_155243.png)
+![Figure 4](./plots/Fig2_Slippery_Comparison_qtable_20260113_155243.png)
 
 *Q-table from slippery experiment (best of two configs).*
 
@@ -82,7 +82,7 @@ There was an issue with this experiment, both configurations failed to learn. Th
 
 **Figure 5**: Effect of different reward penalties
 
-![Figure 5](plots/Fig3_Reward_Shaping_20260113_155318.png)
+![Figure 5](./plots/Fig3_Reward_Shaping_20260113_155318.png)
 
 *Reward shaping experiments. Settings: α=0.1, γ=0.99, ε-greedy, slippery=True.*
 
@@ -97,7 +97,7 @@ Interesting results here. Adding penalties actually made performance worse inste
 
 **Figure 6**: Epsilon-greedy vs Boltzmann exploration
 
-![Figure 6](plots/Fig4_Exploration_Strategies_20260113_155428.png)
+![Figure 6](./plots/Fig4_Exploration_Strategies_20260113_155428.png)
 
 *Comparison of exploration methods. Settings: α=0.1, γ=0.99, slippery=True.*
 
@@ -110,7 +110,7 @@ Epsilon-greedy won with 76% success. It was also more stable in the learning cur
 
 **Figure 7**: Q-table comparison
 
-![Figure 7](plots/Fig4_Exploration_Strategies_qtable_20260113_155428.png)
+![Figure 7](./plots/Fig4_Exploration_Strategies_qtable_20260113_155428.png)
 
 *Q-table from best exploration strategy (epsilon-greedy, 76% success).*
 
@@ -118,7 +118,7 @@ Epsilon-greedy won with 76% success. It was also more stable in the learning cur
 
 **Figure 8**: Impact of discount factor on learning
 
-![Figure 8](plots/Fig5_Discount_Factor_Comparison_20260113_155458.png)
+![Figure 8](./plots/Fig5_Discount_Factor_Comparison_20260113_155458.png)
 
 *Discount factor comparison. Settings: α=0.1, ε-greedy, slippery=True.*
 
@@ -131,7 +131,7 @@ This is weird. γ=0.95 worked great with 77% but both 0.9 and 0.99 completely fa
 
 **Figure 9**: Q-table for discount factor
 
-![Figure 9](plots/Fig5_Discount_Factor_Comparison_20260113_155458.png)
+![Figure 9](./plots/Fig5_Discount_Factor_Comparison_qtable_20260113_155458.png)
 
 *Q-table showing value propagation with γ=0.95 (only working config).*
 
