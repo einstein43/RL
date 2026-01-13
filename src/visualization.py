@@ -73,8 +73,10 @@ def plot_learning_curves(
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved learning curves to {save_path}")
+    else:
+        plt.show()
     
-    plt.show()
+    plt.close()
 
 
 def plot_q_table_heatmap(
@@ -147,8 +149,10 @@ def plot_q_table_heatmap(
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved Q-table heatmap to {save_path}")
+    else:
+        plt.show()
     
-    plt.show()
+    plt.close()
 
 
 def plot_single_experiment(
@@ -209,8 +213,10 @@ def plot_single_experiment(
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved experiment results to {save_path}")
+    else:
+        plt.show()
     
-    plt.show()
+    plt.close()
 
 
 def _moving_average(data: List[float], window_size: int) -> np.ndarray:
