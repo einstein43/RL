@@ -3,3 +3,8 @@ numpy>=1.24.0
 matplotlib>=3.7.0
 seaborn>=0.12.0
 pandas>=2.0.0
+
+# Deep Learning dependencies for Part 2
+torch>=2.0.0
+tensorboard>=2.13.0
+tqdm>=4.65.0

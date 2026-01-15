@@ -5,6 +5,185 @@ from typing import Dict, List, Optional
 import os
 
 
+def plot_dqn_training_curves(
+    episode_rewards: List[float],
+    episode_lengths: List[int],
+    losses: List[float],
+    epsilons: List[float],
+    save_path: Optional[str] = None,
+    title: str = "DQN Training Progress",
+    window_size: int = 50
+):
+    """
+    Plot training curves for DQN agent.
+    
+    Args:
+        episode_rewards: Rewards per episode
+        episode_lengths: Episode lengths
+        losses: Training losses
+        epsilons: Epsilon values
+        save_path: Path to save figure
+        title: Figure title
+        window_size: Moving average window
+    """
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    fig.suptitle(title, fontsize=16, fontweight='bold')
+    
+    # Episode rewards
+    ax = axes[0, 0]
+    episodes = range(len(episode_rewards))
+    moving_avg = _moving_average(episode_rewards, window_size)
+    ax.plot(episodes, episode_rewards, alpha=0.2, color='blue', label='Raw')
+    ax.plot(episodes, moving_avg, linewidth=2, color='blue', label=f'Moving Avg (window={window_size})')
+    ax.axhline(y=500, color='red', linestyle='--', label='Target (500)', alpha=0.7)
+    ax.set_xlabel('Episode', fontsize=12)
+    ax.set_ylabel('Total Reward', fontsize=12)
+    ax.set_title('Episode Rewards', fontsize=13, fontweight='bold')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    
+    # Episode lengths
+    ax = axes[0, 1]
+    moving_avg_length = _moving_average(episode_lengths, window_size)
+    ax.plot(episodes, episode_lengths, alpha=0.2, color='green', label='Raw')
+    ax.plot(episodes, moving_avg_length, linewidth=2, color='green', label=f'Moving Avg (window={window_size})')
+    ax.axhline(y=500, color='red', linestyle='--', label='Target (500)', alpha=0.7)
+    ax.set_xlabel('Episode', fontsize=12)
+    ax.set_ylabel('Episode Length (steps)', fontsize=12)
+    ax.set_title('Episode Lengths', fontsize=13, fontweight='bold')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    
+    # Training loss
+    ax = axes[1, 0]
+    if losses:
+        loss_episodes = np.linspace(0, len(episode_rewards), len(losses))
+        moving_avg_loss = _moving_average(losses, window_size)
+        ax.plot(loss_episodes, losses, alpha=0.2, color='orange', label='Raw')
+        ax.plot(loss_episodes, moving_avg_loss, linewidth=2, color='orange', label=f'Moving Avg (window={window_size})')
+        ax.set_xlabel('Training Steps', fontsize=12)
+        ax.set_ylabel('Loss (MSE)', fontsize=12)
+        ax.set_title('Training Loss', fontsize=13, fontweight='bold')
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+    
+    # Epsilon decay
+    ax = axes[1, 1]
+    ax.plot(episodes, epsilons, linewidth=2, color='purple')
+    ax.set_xlabel('Episode', fontsize=12)
+    ax.set_ylabel('Epsilon (ε)', fontsize=12)
+    ax.set_title('Exploration Rate (Epsilon Decay)', fontsize=13, fontweight='bold')
+    ax.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"✓ Saved training curves to {save_path}")
+    
+    plt.close()
+    return fig
+
+
+def plot_dqn_comparison(
+    experiments: Dict[str, Dict[str, List]],
+    save_path: Optional[str] = None,
+    title: str = "DQN Experiments Comparison",
+    window_size: int = 50
+):
+    """
+    Compare multiple DQN experiments.
+    
+    Args:
+        experiments: Dict mapping experiment names to their histories
+        save_path: Path to save figure
+        title: Figure title
+        window_size: Moving average window
+    """
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    fig.suptitle(title, fontsize=16, fontweight='bold')
+    
+    colors = plt.cm.tab10(np.linspace(0, 1, len(experiments)))
+    
+    # Episode rewards
+    ax = axes[0, 0]
+    for (exp_name, history), color in zip(experiments.items(), colors):
+        rewards = history['episode_rewards']
+        moving_avg = _moving_average(rewards, window_size)
+        episodes = range(len(moving_avg))
+        ax.plot(episodes, moving_avg, label=exp_name, color=color, linewidth=2, alpha=0.8)
+    
+    ax.axhline(y=500, color='red', linestyle='--', label='Target', alpha=0.5)
+    ax.set_xlabel('Episode', fontsize=12)
+    ax.set_ylabel(f'Average Reward (window={window_size})', fontsize=12)
+    ax.set_title('Training Rewards Comparison', fontsize=13, fontweight='bold')
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    ax.grid(True, alpha=0.3)
+    
+    # Episode lengths
+    ax = axes[0, 1]
+    for (exp_name, history), color in zip(experiments.items(), colors):
+        lengths = history['episode_lengths']
+        moving_avg = _moving_average(lengths, window_size)
+        episodes = range(len(moving_avg))
+        ax.plot(episodes, moving_avg, label=exp_name, color=color, linewidth=2, alpha=0.8)
+    
+    ax.axhline(y=500, color='red', linestyle='--', alpha=0.5)
+    ax.set_xlabel('Episode', fontsize=12)
+    ax.set_ylabel(f'Average Length (window={window_size})', fontsize=12)
+    ax.set_title('Episode Lengths Comparison', fontsize=13, fontweight='bold')
+    ax.grid(True, alpha=0.3)
+    
+    # Training convergence (episodes to reach target)
+    ax = axes[1, 0]
+    exp_names = []
+    episodes_to_target = []
+    for exp_name, history in experiments.items():
+        rewards = history['episode_rewards']
+        # Find first episode where moving average >= 450
+        moving_avg = _moving_average(rewards, window_size)
+        idx = np.where(moving_avg >= 450)[0]
+        if len(idx) > 0:
+            episodes_to_target.append(idx[0])
+        else:
+            episodes_to_target.append(len(rewards))
+        exp_names.append(exp_name)
+    
+    bars = ax.barh(exp_names, episodes_to_target, color=colors)
+    ax.set_xlabel('Episodes to Converge', fontsize=12)
+    ax.set_title('Convergence Speed', fontsize=13, fontweight='bold')
+    ax.grid(True, alpha=0.3, axis='x')
+    
+    # Final performance comparison
+    ax = axes[1, 1]
+    exp_names = []
+    final_rewards = []
+    for exp_name, history in experiments.items():
+        # Average of last 100 episodes
+        rewards = history['episode_rewards']
+        final_avg = np.mean(rewards[-100:]) if len(rewards) >= 100 else np.mean(rewards)
+        final_rewards.append(final_avg)
+        exp_names.append(exp_name)
+    
+    bars = ax.barh(exp_names, final_rewards, color=colors)
+    ax.axvline(x=500, color='red', linestyle='--', label='Target', alpha=0.5)
+    ax.set_xlabel('Average Reward (Last 100 Episodes)', fontsize=12)
+    ax.set_title('Final Performance', fontsize=13, fontweight='bold')
+    ax.legend()
+    ax.grid(True, alpha=0.3, axis='x')
+    
+    plt.tight_layout()
+    
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"✓ Saved comparison plot to {save_path}")
+    
+    plt.close()
+    return fig
+
+
 def plot_learning_curves(
     metrics_dict: Dict[str, Dict[str, List[float]]],
     save_path: Optional[str] = None,
