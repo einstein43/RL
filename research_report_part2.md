@@ -3,7 +3,7 @@
 Alexander van Heteren  
 January 2026
 
-I used Claude Sonnet 4.5 to help with the DQN implementation and code structure.
+I used Claude Sonnet 4.5 to help with the DQN implemetation and report structure.
 
 ## Introduction
 
@@ -264,7 +264,7 @@ This is much slower than tabular Q-learning which just updates array entries. Bu
 
 **Low Discount Factor (γ=0.95)**: With only 18.7 average reward, this was the worst performer. The discount factor was too myopic - it only valued immediate rewards and discounted future states too heavily. In CartPole, you need to plan ahead to keep the pole balanced, so such short-term thinking failed completely.
 
-**High Discount Factor (γ=0.999)**: This also failed with 226.6 average reward. While it valued future rewards, γ=0.999 made the agent too focused on distant futures. The temporal credit assignment became too diffuse - it couldn't effectively learn which actions in which states led to success because it was considering rewards hundreds of steps away with nearly equal weight.
+**High Discount Factor (γ=0.999)**: This also failed with 226.6 average reward. While it valued future rewards, γ=0.999 made the agent too focused on distant futures. The temporal credit assignment became too diffuse it couldn't effectively learn which actions in which states led to success because it was considering rewards hundreds of steps away with nearly equal weight.
 
 **Exploration vs Exploitation**: All failed experiments struggled with the exploration-exploitation tradeoff. Either they explored too long with unstable learning (high α), or they couldn't properly evaluate long-term consequences (wrong γ).
 
@@ -311,9 +311,9 @@ This progression is typical for DQN. There's a "learning cliff" around episode 4
 ## Conclusions
 
 Deep Q-Network successfully solved CartPole-v1, achieving:
-- ✅ 100% success rate (500 steps in all test episodes)
-- ✅ Stable learned policy (zero variance)
-- ✅ Reasonable training time (881 episodes, ~10 minutes)
+- 100% success rate (500 steps in all test episodes)
+- Stable learned policy (zero variance)
+- Reasonable training time (881 episodes, ~10 minutes)
 
 **Key Takeaways:**
 
@@ -371,7 +371,7 @@ The project achieved its goal: **learn to balance the CartPole for 500 steps usi
 
 ## Code
 
-All code is available on GitLab: [Link to be added]
+All code is available on Github: https://github.com/einstein43/RL.git
 
 The main files for Part 2 are:
 - `src/dqn_agent.py` - DQN agent with neural network (300+ lines)
@@ -383,11 +383,4 @@ The main files for Part 2 are:
 - `run_all_dqn_experiments.py` - Batch runner for all experiments
 - `visualize_dqn_results.py` - Result visualization utility
 
-Total implementation: ~1,500 lines of documented code for Part 2.
-
-## References
-
-- Mnih, V., et al. (2015). "Human-level control through deep reinforcement learning." Nature.
-- Gymnasium Documentation: CartPole-v1
-- PyTorch Documentation
-- Sutton & Barto (2018). "Reinforcement Learning: An Introduction" (2nd edition)
+ 
